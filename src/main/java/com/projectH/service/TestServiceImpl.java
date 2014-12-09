@@ -12,7 +12,6 @@ public class TestServiceImpl implements TestService {
 	@Autowired
 	private TestDAO testdao;
 
-	@Override
 	public TestBean test() {
 		return this.testdao.test();
 	}

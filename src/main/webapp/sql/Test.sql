@@ -8,3 +8,4 @@ test_no int primary key
 );
 
 insert into test values(1,'테스트');
+
