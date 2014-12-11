@@ -4,12 +4,12 @@ public class CompanyBean {
 
 	private String company_id;
 	private String company_name;
-	private String company_pwd;
 	private String compnay_eamil;
 	private String company_phone;
 	private String company_letter;
 	private int company_total_cash;
 	private String company_cash_num;
+	private String company_pwd;
 	
 	public String getCompany_id() {
 		return company_id;
@@ -22,12 +22,6 @@ public class CompanyBean {
 	}
 	public void setCompany_name(String company_name) {
 		this.company_name = company_name;
-	}
-	public String getCompany_pwd() {
-		return company_pwd;
-	}
-	public void setCompany_pwd(String company_pwd) {
-		this.company_pwd = company_pwd;
 	}
 	public String getCompnay_eamil() {
 		return compnay_eamil;
@@ -58,6 +52,12 @@ public class CompanyBean {
 	}
 	public void setCompany_cash_num(String company_cash_num) {
 		this.company_cash_num = company_cash_num;
+	}
+	public String getCompany_pwd() {
+		return company_pwd;
+	}
+	public void setCompany_pwd(String company_pwd) {
+		this.company_pwd = company_pwd;
 	}
 	
 	

@@ -18,6 +18,8 @@ COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
 );
 
 alter table TB_COMPANY_INFO add COMPANY_PWD varchar(50) not null;
+describe TB_COMPANY_INFO;
+select * from TB_COMPANY_INFO;
 
 CREATE TABLE TB_EVENT(/*이벤트 테이블*/
 EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/	
