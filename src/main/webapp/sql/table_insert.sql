@@ -17,6 +17,8 @@ COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
 ,COMPANY_CASH_NUM VARCHAR(30) 	/*기관계좌번호*/
 );
 
+alter table TB_COMPANY_INFO add COMPANY_PWD varchar(50) not null;
+
 CREATE TABLE TB_EVENT(/*이벤트 테이블*/
 EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/	
 ,COMPANY_ID	VARCHAR(50) /*아이디(PK)(FK)*/	
