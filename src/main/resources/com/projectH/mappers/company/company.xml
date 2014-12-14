@@ -6,4 +6,19 @@
 
 <mapper namespace="company">
 	
+	<!-- 중복아이디 검색 -->
+  	<select id="id_check" parameterType="String" resultType="company">
+    	select * from TB_COMPANY_INFO where company_id=#{company_id}
+ 	</select>
+ 	
+ 	 <!-- 회원저장 -->
+	  <insert id="company_in" parameterType="company">
+	    insert into TB_COMPANY_INFO (company_id,company_pwd,company_name,company_phone,company_email,company_letter,company_cash_num,company_total_cash)
+	    values(#{company_id},#{company_pwd},#{company_name},#{company_phone},#{company_email},#{company_letter},#{company_cash_num},0)
+	  </insert>
+	  
+	  <!-- 로그인 인증 -->
+	   <select id="login_check" parameterType="String" resultType="company">
+   			select * from TB_COMPANY_INFO where company_id=#{company_id}
+	   </select>
 </mapper>
