@@ -34,7 +34,7 @@ public class CompanyAction {
 		return "company/company_join";
 	}
 	
-	//관리자 가입,중복아이디 검사
+	//부관리자 가입,중복아이디 검사
 	@RequestMapping("/company_join_ok.com")
 	public String company_join_ok(@ModelAttribute CompanyBean companybean,
 			   HttpServletResponse response) throws Exception{
@@ -66,7 +66,7 @@ public class CompanyAction {
 			return "company/company_main";
 		}
 		
-		//로그인 인증
+		//부관리자 로그인 인증
 		@RequestMapping("/company_login_ok.com")
 		public String member_login_ok(
 				@RequestParam("company_id") String company_id,
@@ -98,9 +98,31 @@ public class CompanyAction {
 			return null;
 	}
 		
+		//부관리자 로그아웃
+		@RequestMapping("/company_logout.com")
+		public String logout(HttpServletResponse response,HttpSession session,
+				HttpServletRequest request)	throws Exception{
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out=response.getWriter();
+			session=request.getSession();
+			
+			session.invalidate();//세션을 만료
+			
+			out.println("<script>");
+			out.println("alert('로그아웃되었습니다!');");
+			out.println("location='company_index.com';");
+			out.println("</script>");
+			
+			return null;
+		}
+		
 		@RequestMapping("/company_event.com")
 		public String company_event(){
 			return "company/company_event";
 		}
 		
+		@RequestMapping("/company_event_write.com")
+		public String company_event_write(){
+			return "company/company_event_write";
+		}
 }
