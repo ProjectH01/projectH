@@ -48,5 +48,5 @@ COMPANY_ID	VARCHAR(50) PRIMARY KEY/*아이디(PK)*/
 ,TAKE_DATE	DATE /*차감날짜*/	
 );
 
-
+select * from TB_COMPANY_INFO;
 drop table TB_EVE_REQ;

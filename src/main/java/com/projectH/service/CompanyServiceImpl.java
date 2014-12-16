@@ -26,4 +26,5 @@ public class CompanyServiceImpl implements CompanyService {
 		return companydao.logincheck(company_id);
 	}
 
+
 }

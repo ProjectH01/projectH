@@ -11,4 +11,5 @@ public interface CompanyDAO {
 
 	CompanyBean logincheck(String company_id);
 
+
 }

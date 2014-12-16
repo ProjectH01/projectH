@@ -21,4 +21,5 @@
 	   <select id="login_check" parameterType="String" resultType="company">
    			select * from TB_COMPANY_INFO where company_id=#{company_id}
 	   </select>
+	   
 </mapper>

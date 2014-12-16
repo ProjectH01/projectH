@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,10 +61,23 @@ public class CompanyAction {
 		   return null;
 	}
 	
-	
 		@RequestMapping("/company_main.com")
-		public String company_main(){
-			return "company/company_main";
+		public String company_main(HttpServletResponse response,
+				   HttpServletRequest request,
+				   HttpSession session)throws Exception{
+			response.setContentType("text/html;charset=UTF-8");
+			   PrintWriter out=response.getWriter();
+			   session=request.getSession();
+			   String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   return "company/company_main";
+			   }
+			   return null;
 		}
 		
 		//부관리자 로그인 인증
@@ -71,7 +85,7 @@ public class CompanyAction {
 		public String member_login_ok(
 				@RequestParam("company_id") String company_id,
 				@RequestParam("company_pwd") String company_pwd,
-				HttpServletResponse response, HttpServletRequest request, HttpSession session) throws Exception{
+				HttpServletResponse response, HttpServletRequest request, HttpSession session,Model m) throws Exception{
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out=response.getWriter();
 			session=request.getSession();//세션 객체 생성
@@ -92,12 +106,14 @@ public class CompanyAction {
 					out.println("</script>");
 				}else{
 					session.setAttribute("id",company_id);
+					 m.addAttribute("phone",cb.getCompany_phone());
+					 m.addAttribute("letter",cb.getCompany_letter());
+					  m.addAttribute("tcash",cb.getCompany_total_cash());
 					return "company/company_main";
 				}
 			}
 			return null;
 	}
-		
 		//부관리자 로그아웃
 		@RequestMapping("/company_logout.com")
 		public String logout(HttpServletResponse response,HttpSession session,
@@ -105,22 +121,17 @@ public class CompanyAction {
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out=response.getWriter();
 			session=request.getSession();
-			
 			session.invalidate();//세션을 만료
-			
 			out.println("<script>");
 			out.println("alert('로그아웃되었습니다!');");
 			out.println("location='company_index.com';");
 			out.println("</script>");
-			
 			return null;
 		}
-		
 		@RequestMapping("/company_event.com")
 		public String company_event(){
 			return "company/company_event";
 		}
-		
 		@RequestMapping("/company_event_write.com")
 		public String company_event_write(){
 			return "company/company_event_write";
