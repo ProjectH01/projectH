@@ -62,8 +62,7 @@
 			
 			<div class="">
   				<a href="company_event_write.com" class="" type="button">이벤트 등록</a>
-			</div>
-			<br />
+			</div><br />
 			<table id="event_list">
 				<tr>
 					<th style="width:8%">상태</th>
@@ -74,8 +73,15 @@
 					<th style="width:15%" class="hidden-xs">비고</th>
 					<th style="width:8%">중지</th>
 				</tr>
-				
-				
+				<tr>
+					<td align="center">${list.eve_state}</td>
+	  				<td align="center">${list.eve_start_date}</td>
+	  				<td align="center">${list.event}</td>	
+	  				<td align="center">${list.cs_count}</td>
+	  				<td align="center">${list.db_price}</td>
+	  				<td align="center">${list.cs_note}</td>
+	  				<td align="center">${list.eve_state}</td>
+          		</tr>
 			</table>
 			</div>
 		</div>

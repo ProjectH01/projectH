@@ -125,4 +125,6 @@ public class CompanyAction {
 		public String company_event_write(){
 			return "company/company_event_write";
 		}
+		
+		
 }

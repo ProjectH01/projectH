@@ -31,6 +31,11 @@ EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/
 ,CS_NOTE	VARCHAR(100)/*비고*/
 );
 
+alter table TB_EVENT add BANNER_IMAGE varchar(100);
+alter table TB_EVENT add DETAIL_IMAGE varchar(100);
+select * from TB_EVENT;
+
+
 CREATE TABLE TB_EVE_REQ(/*이벤트 신청*/
 USER_ID	VARCHAR(50) /*아이디(FK)*/
 ,CS_TIME	VARCHAR(20) NOT NULL/*상담요청시간*/
