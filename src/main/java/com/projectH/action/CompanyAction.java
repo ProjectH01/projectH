@@ -1,6 +1,10 @@
 package com.projectH.action;
 
+import java.io.File;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,13 +12,17 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import pwdconv.PwdChange;
 
+import com.oreilly.servlet.MultipartRequest;
 import com.projectH.model.CompanyBean;
+import com.projectH.model.EventBean;
 import com.projectH.service.CompanyService;
 
 @Controller
@@ -60,10 +68,33 @@ public class CompanyAction {
 		   return null;
 	}
 	
-	
 		@RequestMapping("/company_main.com")
-		public String company_main(){
-			return "company/company_main";
+		public String company_main(HttpServletResponse response,
+				   HttpServletRequest request, Model m,
+				   HttpSession session,CompanyBean cb, EventBean eb)throws Exception{
+System.out.println("company main");
+			response.setContentType("text/html;charset=UTF-8");
+			   PrintWriter out=response.getWriter();
+			   session=request.getSession();
+			   String id=(String)session.getAttribute("company_id");
+			  
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   System.out.println(eb.getCompany_id()+"dd");
+				   System.out.println("---------");
+				   System.out.println(eb.getEve_state()+"hhjhh");
+				   eb.setCompany_id(id);
+				   System.out.println(eb.getCompany_id());
+				   int event_pro_listcount =  companyservice.eventprogress(eb);
+
+					   m.addAttribute("event_pro_listcount",event_pro_listcount);
+				   return "company/company_main";
+			   }
+			   return null;
 		}
 		
 		//부관리자 로그인 인증
@@ -71,11 +102,11 @@ public class CompanyAction {
 		public String member_login_ok(
 				@RequestParam("company_id") String company_id,
 				@RequestParam("company_pwd") String company_pwd,
-				HttpServletResponse response, HttpServletRequest request, HttpSession session) throws Exception{
+				HttpServletResponse response, HttpServletRequest request, HttpSession session,Model m) throws Exception{
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out=response.getWriter();
 			session=request.getSession();//세션 객체 생성
-			
+			session.setAttribute("company_id",company_id);
 			CompanyBean cb=this.companyservice.loginCheck(company_id);
 			if(cb == null){
 				out.println("<script>");
@@ -92,12 +123,15 @@ public class CompanyAction {
 					out.println("</script>");
 				}else{
 					session.setAttribute("id",company_id);
-					return "company/company_main";
+					 m.addAttribute("phone",cb.getCompany_phone());
+					 m.addAttribute("letter",cb.getCompany_letter());
+					  m.addAttribute("tcash",cb.getCompany_total_cash());
+
+					return "redirect:/company_main.com";
 				}
 			}
 			return null;
 	}
-		
 		//부관리자 로그아웃
 		@RequestMapping("/company_logout.com")
 		public String logout(HttpServletResponse response,HttpSession session,
@@ -105,26 +139,337 @@ public class CompanyAction {
 			response.setContentType("text/html;charset=UTF-8");
 			PrintWriter out=response.getWriter();
 			session=request.getSession();
-			
 			session.invalidate();//세션을 만료
-			
 			out.println("<script>");
 			out.println("alert('로그아웃되었습니다!');");
 			out.println("location='company_index.com';");
 			out.println("</script>");
-			
 			return null;
 		}
 		
+		//이벤트 광고중 바꾸기
+		@RequestMapping("company_event_state_edit")
+		public String company_event_state_edit(HttpServletResponse response,HttpSession session,
+				HttpServletRequest request, Model m, CompanyBean cb, EventBean eb) throws Exception{
+				
+				response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+				String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   eb.setEvent(new String(eb.getEvent().getBytes("ISO-8859-1"),"UTF-8"));
+				   if(eb.getEve_state() == 1){
+					   eb.setEve_state(0);
+				   }else if(eb.getEve_state() == 0){
+					   eb.setEve_state(1);
+				   }
+				
+				   System.out.println("--------------------------");
+				   System.out.println(eb.getEvent());
+				   System.out.println(eb.getEve_state());
+				   System.out.println("--------------------------");
+				   companyservice.eventstateEdit(eb);
+				   return "redirect:/company_event.com";
+			   }
+			return null;
+		}
+
+		//이벤트 리스트
 		@RequestMapping("/company_event.com")
-		public String company_event(){
-			return "company/company_event";
+		public String company_event(HttpServletResponse response,HttpSession session,
+				HttpServletRequest request, Model m, CompanyBean cb, EventBean eb)throws Exception {
+			response.setContentType("text/html;charset=UTF-8");
+			   PrintWriter out=response.getWriter();
+			   session=request.getSession();
+			   String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+//				   session.setAttribute("id",company_id);
+				   m.addAttribute("phone",cb.getCompany_phone());
+				   m.addAttribute("letter",cb.getCompany_letter());
+				   m.addAttribute("tcash",cb.getCompany_total_cash());
+				   eb.setCompany_id(id);
+				   List<EventBean> elist=this.companyservice.getEventList(eb);//목록
+
+				   m.addAttribute("elist", elist);
+
+				   return "company/company_event";
+			   }
+			   return null;
 		}
 		
+		//광고중인 이벤트 갯수
+		
+		
+		//이벤트 작성
 		@RequestMapping("/company_event_write.com")
-		public String company_event_write(){
-			return "company/company_event_write";
+		public String company_event_write(HttpServletResponse response,HttpSession session,
+				HttpServletRequest request, Model m, CompanyBean cb) throws Exception {
+			response.setContentType("text/html;charset=UTF-8");
+			PrintWriter out=response.getWriter();
+			session=request.getSession();
+			
+	     String id=(String)session.getAttribute("company_id");
+	     if(id==null){
+	    	 out.println("<script>");
+	    	 out.println("alert('다시 로그인 하세요!')");
+	    	 out.println("location='company_index.com';");
+	    	 out.println("</script>");
+	     	}else if(id != null){
+//				   session.setAttribute("id",company_id);
+				   m.addAttribute("phone",cb.getCompany_phone());
+				   m.addAttribute("letter",cb.getCompany_letter());
+				   m.addAttribute("tcash",cb.getCompany_total_cash());
+				   return "company/company_event_write";
+			   }
+			   return null;
 		}
 		
-		
+			//이벤트 등록
+		   @RequestMapping(value="/company_event_write_ok.com")
+		    public String company_event_write_ok(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+		                @ModelAttribute EventBean eventbean ) throws Exception {
+		          
+		          response.setContentType("text/html;charset=UTF-8");
+		          PrintWriter out=response.getWriter();
+		          session=request.getSession();//세션 객체 생성
+		          String company_id=(String)session.getAttribute("company_id");
+		          if(company_id == null){
+		             out.println("<script>");
+		             out.println("alert('다시 로그인 하세요!')");
+		             out.println("location='company_index.com';");
+		             out.println("</script>");
+		          }else{
+		          String saveFolder="C:/Users/USER/git/projectH/src/main/webapp/upload";
+		          //이진파일 업로드 경로      
+		          int fileSize=5*1024*1024;//이진파일 업로드 최대크기,5mb
+		       
+		          MultipartRequest multi=null;//이진파일 업로드 변수선언
+
+		          multi=new MultipartRequest(request,saveFolder,fileSize,"UTF-8");
+
+		       
+		          String event=multi.getParameter("event").trim();
+		          int db_price=Integer.parseInt(multi.getParameter("db_price"));
+		       
+		           File UpFile=multi.getFile("banner_image");//첨부한 이진파일을 가져옴
+		           File UpFile2=multi.getFile("detail_image");//첨부한 이진파일을 가져옴
+
+		           
+		           if(UpFile != null && UpFile2 != null){//첨부한 이진파일이 있을때 실행
+		              String fileName=UpFile.getName();//첨부한 이진파일명을 구함
+		              String fileName2=UpFile2.getName();//첨부한 이진파일명을 구함
+		              Calendar c=Calendar.getInstance();
+		              int year=c.get(Calendar.YEAR);
+		              int month=c.get(Calendar.MONTH)+1;
+		              int date=c.get(Calendar.DATE);
+		              
+		          String homedir=saveFolder+"/banner"+"/"+year+"-"+month+"-"+date;
+		          String homedir2=saveFolder+"/detail"+"/"+year+"-"+month+"-"+date;
+
+		          //새로운 이진파일 폴더 경로를 저장
+		              File path1=new File(homedir);
+		              if(!(path1.exists())){//폴더경로가 없으면
+		                 path1.mkdir();//폴더를 생성
+		              }
+		              
+		              File path2=new File(homedir2);
+		              if(!(path2.exists())){//폴더경로가 없으면
+		                 path2.mkdir();//폴더를 생성
+		              }
+		              
+		              Random r=new Random();//난수를 발생시키는 클래스
+		              int random=r.nextInt(100000000);
+		              //1억사이의 정수형 난수를 발생시킴
+		              
+		              /****확장자 구하기 시작 ****/
+		             int index = fileName.lastIndexOf(".");
+		             String fileExtension = fileName.substring(index + 1);
+		             /****확장자 구하기 끝 ***/
+		             /****확장자 구하기 시작 ****/
+		             int index2 = fileName2.lastIndexOf(".");
+		             String fileExtension2 = fileName2.substring(index2 + 1);
+
+		             /****확장자 구하기 끝 ***/
+		             String refileName="banner"+year+month+date+random+"."+
+		                   fileExtension;//새로운 파일명을 저장  
+		             String refileName2="detail"+year+month+date+random+"."+
+		                   fileExtension;//새로운 파일명을 저장  
+		             
+		          String fileDBName="/"+year+"-"+month+"-"+date+"/"+
+		                   refileName;//데이터베이스에 저장될 레코드값
+		          String fileDBName2="/"+year+"-"+month+"-"+date+"/"+
+		                refileName2;//데이터베이스에 저장될 레코드값
+		          
+		          UpFile.renameTo(new File(homedir+"/"+refileName));
+		          //새롭게 생성된 폴더에 바뀐 이진파일명으로 업로드
+		          UpFile2.renameTo(new File(homedir2+"/"+refileName2));
+		          //새롭게 생성된 폴더에 바뀐 이진파일명으로 업로드
+		          
+		          eventbean.setBanner_image(fileDBName);
+		          eventbean.setDetail_image(fileDBName2);
+
+		           }else{//이진파일을 첨부하지 않았을때
+		              String fileDBName="";
+		              String fileDBName2="";
+		              eventbean.setBanner_image(fileDBName);//첨부하지 않은 경우는 빈공백을
+		              eventbean.setDetail_image(fileDBName2);//첨부하지 않은 경우는 빈공백을
+		              //저장시킴
+		           }
+		           eventbean.setEvent(event);
+		           eventbean.setDb_price(db_price);
+		           eventbean.setCompany_id(company_id);
+		               
+		               this.companyservice.insertEvent(eventbean);//저장메서드 호출
+		               
+		                return "redirect:/company_event.com";
+		             }
+		          return null;
+		       }
+		   
+		   //이벤트 수정내용보기
+		   @RequestMapping("/company_event_edit.com")
+			public ModelAndView company_event_edit(
+					@RequestParam("event") String event,HttpServletResponse response, HttpSession session,
+					HttpServletRequest request) throws Exception{
+	
+			   	response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+			   
+				String id=(String)session.getAttribute("company_id");
+		        if(id == null){
+		        	out.println("<script>");
+		        	out.println("alert('다시 로그인 하세요!')");
+		        	out.println("location='company_index.com'");
+		        	out.println("</script>");
+		        }
+		        
+		        event=new String(event.getBytes("ISO-8859-1"),"UTF-8");
+		        
+			   EventBean ev=this.companyservice.geteventCont(event);
+			   
+			   ModelAndView cm=new ModelAndView("company/company_event_edit");
+			   cm.addObject("ev",ev);
+			   
+			   return cm;
+		   }
+		   
+		   //이벤트 수정
+		   @RequestMapping("/company_event_edit_ok.com")
+			public String company_event_edit_ok(HttpServletResponse response,HttpSession session,
+					HttpServletRequest request, Model m, @ModelAttribute EventBean event)throws Exception{
+			    
+			   	response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+			   
+				String id=(String)session.getAttribute("company_id");
+		        if(id == null){
+		        	out.println("<script>");
+		        	out.println("alert('다시 로그인 하세요!')");
+		        	out.println("location='company_index.com'");
+		        	out.println("</script>");
+		        }else{
+		        	String saveFolder="C:/Users/USER/git/projectH/src/main/webapp/upload";
+			        //이진파일 업로드 경로      
+		        	int fileSize=5*1024*1024;//이진파일 업로드 최대크기,5mb
+		        	MultipartRequest multi=null;
+		        	multi=new MultipartRequest(request,saveFolder,fileSize,"UTF-8");
+		        	//이진파일 업로드 객체 생성
+		        	//request는 사용자폼에서 입력한 정보를 서버로 가져오는 역할
+		        	//saveFolder는 이진파일 업로드 서버 경로
+		        	//fileSize는 이진파일 업로드 최대 크기
+		        	//UTF-8은 언어코딩 타입설정
+		        	String eventp=multi.getParameter("event").trim();
+			        int db_price=Integer.parseInt(multi.getParameter("db_price"));
+		     
+			        File UpFile=multi.getFile("banner_image");//첨부한 이진파일을 가져옴
+			        File UpFile2=multi.getFile("detail_image");//첨부한 이진파일을 가져옴
+
+		        	if(UpFile != null && UpFile2 != null){//첨부한 이진파일이 존재한다면
+		        		 String fileName=UpFile.getName();//첨부한 이진파일명을 구함
+			             String fileName2=UpFile2.getName();//첨부한 이진파일명을 구함
+		        		 
+			             File DelFile=new File(saveFolder+event.getBanner_image());
+			             File DelFile2=new File(saveFolder+event.getDetail_image());
+		        			//삭제할 파일 객체를 생성
+		        			if(DelFile.exists() && DelFile2.exists()){//삭제할 파일 객체가 존재하면
+		        				DelFile.delete();//이진파일을 삭제
+		        				DelFile2.delete();
+		        			}
+		        			Calendar c=Calendar.getInstance();
+				            int year=c.get(Calendar.YEAR);
+				            int month=c.get(Calendar.MONTH)+1;
+				            int date=c.get(Calendar.DATE);
+		        			
+				             String homedir=saveFolder+"/banner"+"/"+year+"-"+month+"-"+date;
+					         String homedir2=saveFolder+"/detail"+"/"+year+"-"+month+"-"+date;
+					         File path1=new File(homedir);
+				              if(!(path1.exists())){//폴더경로가 없으면
+				                 path1.mkdir();//폴더를 생성
+				              }
+				              File path2=new File(homedir2);
+				              if(!(path2.exists())){//폴더경로가 없으면
+				                 path2.mkdir();//폴더를 생성
+				              }
+				              Random r=new Random();//난수를 발생시키는 클래스
+				              int random=r.nextInt(100000000);
+				              //1억사이의 정수형 난수를 발생시킴
+				              
+				              /****확장자 구하기 시작 ****/
+					          int index = fileName.lastIndexOf(".");
+					          String fileExtension = fileName.substring(index + 1);
+					          /****확장자 구하기 끝 ***/
+					          /****확장자 구하기 시작 ****/
+					          int index2 = fileName2.lastIndexOf(".");
+					          String fileExtension2 = fileName2.substring(index2 + 1);
+					          /****확장자 구하기 끝 ***/
+					          String refileName="banner"+year+month+date+random+"."+
+					                   fileExtension;//새로운 파일명을 저장  
+					          String refileName2="detail"+year+month+date+random+"."+
+					                   fileExtension;//새로운 파일명을 저장  
+					             
+					          String fileDBName="/"+year+"-"+month+"-"+date+"/"+
+					                   refileName;//데이터베이스에 저장될 레코드값
+					          String fileDBName2="/"+year+"-"+month+"-"+date+"/"+
+					                refileName2;//데이터베이스에 저장될 레코드값
+					          UpFile.renameTo(new File(homedir+"/"+refileName));
+					          //새롭게 생성된 폴더에 바뀐 이진파일명으로 업로드
+					          UpFile2.renameTo(new File(homedir2+"/"+refileName2));
+					          //새롭게 생성된 폴더에 바뀐 이진파일명으로 업로드
+					          event.setBanner_image(fileDBName);
+					          event.setDetail_image(fileDBName2);
+					          
+		        		}else{//첨부하지 않은 경우
+		        			if(event.getBanner_image() != null && event.getDetail_image() != null){
+		        				event.setBanner_image(event.getBanner_image());
+		        				event.setDetail_image(event.getDetail_image());
+		        			//기존 이진파일을 가져와 저장
+		        			}else{
+		        			  String fileDBName="";
+		  		              String fileDBName2="";
+		  		            event.setBanner_image(fileDBName);//첨부하지 않은 경우는 빈공백을
+		  		            event.setDetail_image(fileDBName2);//첨부하지 않은 경우는 빈공백을
+		  		              //저장시킴
+		        			}
+		        		}
+		        		event.setEvent(eventp);
+		        		event.setDb_price(db_price);
+		        		
+		        		this.companyservice.editEvent(event);//수정메서드를 호출
+		        		return "redirect:/company_event.com";
+		        	}
+		        	   
+		        			return null;
+		        		}
 }

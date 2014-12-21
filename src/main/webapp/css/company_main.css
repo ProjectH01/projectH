@@ -1,13 +1,12 @@
 @CHARSET "UTF-8";
 /* default */
-html, body, h1, h2, h3, h4, h5, h6, ul, li, dl, dt, dd, p {padding:0; margin:0;}
 html {overflow-y:scroll;}
-body {color:#555;}
-body, a, select, input, button, textarea {font-family:'Malgun Gothic', Dotum, Gulim, Arial, Verdana, Tahoma;}
-legend, .hidden {position:absolute; left:-9999px; width:1px; height:1px; font-size:0; line-height:0; overflow:hidden;}
+body {padding:70px;color:#555;}
+li {list-style:none;}
+/*legend, .hidden {position:absolute; left:-9999px; width:1px; height:1px; font-size:0; line-height:0; overflow:hidden;}
 caption {position:static; margin:0 !important; height:0 !important; font-size:0 !important; line-height:0 !important; overflow:hidden;}
 fieldset {border:0;}
-li {list-style:none;}
+
 img {vertical-align:middle; border:0;}
 input, button, label, textarea, select {vertical-align:middle;}
 button {border:0; cursor:pointer; background:transparent; overflow:visible;}
@@ -15,4 +14,8 @@ button::-moz-focus-inner {border:0; padding:0;}
 input::-moz-focus-inner {border:0; padding:0}
 
 div .sidebar_menu {float:left; width:240px;}
-div .row li {float:left;}
+div .row li {float:left;}*/
+
+.profile{
+	float:right;
+}

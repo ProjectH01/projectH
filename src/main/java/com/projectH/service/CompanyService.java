@@ -1,6 +1,9 @@
 package com.projectH.service;
 
+import java.util.List;
+
 import com.projectH.model.CompanyBean;
+import com.projectH.model.EventBean;
 
 
 public interface CompanyService {
@@ -10,6 +13,21 @@ public interface CompanyService {
 	void insertJoin(CompanyBean companybean);
 
 	CompanyBean loginCheck(String company_id);
+
+	List<EventBean> getEventList(EventBean eb);
+	
+	void insertEvent(EventBean eventbean);
+	
+	void editEvent(EventBean ev);
+
+	EventBean geteventCont(String event);
+
+	void eventstateEdit(EventBean eb);
+
+	int eventprogress(EventBean eb);
+
+
+
 
 
 }

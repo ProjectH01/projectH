@@ -33,7 +33,11 @@ EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/
 
 alter table TB_EVENT add BANNER_IMAGE varchar(100);
 alter table TB_EVENT add DETAIL_IMAGE varchar(100);
+
+
 select * from TB_EVENT;
+
+update TB_EVENT set company_id="admin" where event="이벤트"
 
 
 CREATE TABLE TB_EVE_REQ(/*이벤트 신청*/
@@ -53,5 +57,5 @@ COMPANY_ID	VARCHAR(50) PRIMARY KEY/*아이디(PK)*/
 ,TAKE_DATE	DATE /*차감날짜*/	
 );
 
-
+select * from TB_COMPANY_INFO;
 drop table TB_EVE_REQ;

@@ -9,6 +9,7 @@
   <typeAliases>
     <typeAlias alias="test" type="com.projectH.model.TestBean" /> 
     <typeAlias alias="company" type="com.projectH.model.CompanyBean" /> 
+    <typeAlias alias="event" type="com.projectH.model.EventBean" /> 
   </typeAliases>   
   
 </configuration>
