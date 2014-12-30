@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.projectH.model.CompanyBean;
 import com.projectH.model.EventBean;
+import com.projectH.model.EventreqBean;
 
 
 @Repository
@@ -62,6 +63,22 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 		return sqlsession.selectOne("eve_progress_count",eb);
 	}
+
+	@Override
+	public List<EventreqBean> eventreqlist(EventreqBean erb) {
+		return sqlsession.selectList("eventreq_list",erb);
+	}
+
+	@Override
+	public void csstateedit(EventreqBean erb) {
+		sqlsession.update("cs_state_edit",erb);
+	}
+
+	@Override
+	public int eventreqcount(EventreqBean erb) {
+		return sqlsession.selectOne("eve_req_count",erb);
+	}
+
 
 
 

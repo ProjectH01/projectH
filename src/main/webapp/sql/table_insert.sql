@@ -7,6 +7,8 @@ USER_ID VARCHAR(50) PRIMARY KEY /* 유저아이디*/
 ,USER_POINT	INTEGER   DEFAULT 0  /* 포인트 */
 );
 
+select * from TB_USER_INFO;
+
 CREATE TABLE TB_COMPANY_INFO(/*회사,기획자 정보*/
 COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
 ,COMPANY_NAME VARCHAR(50) NOT NULL /* 상호명,이름 */	
@@ -20,6 +22,7 @@ COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
 alter table TB_COMPANY_INFO add COMPANY_PWD varchar(50) not null;
 describe TB_COMPANY_INFO;
 select * from TB_COMPANY_INFO;
+update TB_COMPANY_INFO set company_total_cash=300000 where company_id='admin';
 
 CREATE TABLE TB_EVENT(/*이벤트 테이블*/
 EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/	
@@ -37,7 +40,7 @@ alter table TB_EVENT add DETAIL_IMAGE varchar(100);
 
 select * from TB_EVENT;
 
-update TB_EVENT set company_id="admin" where event="이벤트"
+update TB_EVENT set company_id='admin' where db_price=20000
 
 
 CREATE TABLE TB_EVE_REQ(/*이벤트 신청*/
@@ -48,6 +51,8 @@ USER_ID	VARCHAR(50) /*아이디(FK)*/
 ,EVENT	VARCHAR(100) NOT NULL/*이벤트명(FK)*/
 ,COMPANY_ID	VARCHAR(50) NOT NULL/*상호 아이디(FK)*/
 );
+
+select * from TB_EVE_REQ;
 
 CREATE TABLE TB_COMPANY_CASH(/*충전금 내역*/
 COMPANY_ID	VARCHAR(50) PRIMARY KEY/*아이디(PK)*/	

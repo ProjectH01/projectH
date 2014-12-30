@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.projectH.dao.CompanyDAO;
 import com.projectH.model.CompanyBean;
 import com.projectH.model.EventBean;
+import com.projectH.model.EventreqBean;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
@@ -59,6 +60,22 @@ public class CompanyServiceImpl implements CompanyService {
 		return companydao.eventprogressLs(eb);
 		
 	}
+
+	@Override
+	public List<EventreqBean> getEventreqList(EventreqBean erb) {
+		return companydao.eventreqlist(erb);
+	}
+
+	@Override
+	public void csstateEdit(EventreqBean erb) {
+		companydao.csstateedit(erb);
+	}
+
+	@Override
+	public int eventreqcount(EventreqBean erb) {
+		return companydao.eventreqcount(erb);
+	}
+
 
 
 	

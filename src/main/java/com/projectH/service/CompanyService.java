@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.projectH.model.CompanyBean;
 import com.projectH.model.EventBean;
+import com.projectH.model.EventreqBean;
 
 
 public interface CompanyService {
@@ -25,6 +26,13 @@ public interface CompanyService {
 	void eventstateEdit(EventBean eb);
 
 	int eventprogress(EventBean eb);
+
+	List<EventreqBean> getEventreqList(EventreqBean erb);
+
+	void csstateEdit(EventreqBean erb);
+
+	int eventreqcount(EventreqBean erb);
+
 
 
 

@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이벤트 등록</title>
+<title>이벤트 수정</title>
 </head>
 <body>
 	<div class="container">
@@ -48,7 +48,7 @@
 				</div>
 				
 			</div>
-			<form method="post" action="company_event_write_ok.com"
+			<form method="post" action="company_event_edit_ok.com"
 				onsubmit="return write_check();" enctype="multipart/form-data">
 				<%-- 그림,동영상 같은 이진파일을  첨부해서 서버에 올리는 자료실  만들때 주의사항
 				   1.반드시 form태그내에 enctype="multipart/form-data"속성을 지정해야 한다.
@@ -62,19 +62,23 @@
 					</tr>
 					<tr>
 						<th>이벤트명</th>
-						<td><input name="event" id="event" size="14" /></td>
+						<td><input name="event" id="event" size="14" value="${ev.event}"/></td>
 					</tr>
 					<tr>
 						<th>일반 배너이미지</th>
-						<td><input type="file" name="banner_image" /></td>
+						<td>
+						<img alt="배너이미지" src="././upload/banner${ev.banner_image}"/>
+						<input type="file" name="banner_image" value="${ev.banner_image}"/></td>
 					</tr>
 					<tr>
 						<th>상세 이미지</th>
-						<td><input type="file" name="detail_image" /></td>
+						<td>
+						<img alt="상세이미지" src="././upload/detail${ev.detail_image}"/>
+						<input type="file" name="detail_image" value="${ev.detail_image}"/></td>
 					</tr>
 					<tr>
 						<th>DB단가설정</th>
-						<td><input name="db_price" id="db_price" size="14" /></td>
+						<td><input name="db_price" id="db_price" size="14" value="${ev.db_price}"/></td>
 					</tr>
 					<tr>
 						<th>카테고리 설정</th>
@@ -98,6 +102,5 @@
 			</form>
 		</div>
 		</div>
-	</div>
 </body>
 </html>

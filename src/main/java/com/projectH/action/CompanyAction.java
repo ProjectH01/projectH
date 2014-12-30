@@ -23,6 +23,8 @@ import pwdconv.PwdChange;
 import com.oreilly.servlet.MultipartRequest;
 import com.projectH.model.CompanyBean;
 import com.projectH.model.EventBean;
+import com.projectH.model.EventreqBean;
+import com.projectH.model.UserBean;
 import com.projectH.service.CompanyService;
 
 @Controller
@@ -67,35 +69,42 @@ public class CompanyAction {
 		   }
 		   return null;
 	}
-	
+		
+		//광고중인 이벤트 갯수, 이벤트 상담요청갯수, 현재 충전금액
 		@RequestMapping("/company_main.com")
 		public String company_main(HttpServletResponse response,
 				   HttpServletRequest request, Model m,
-				   HttpSession session,CompanyBean cb, EventBean eb)throws Exception{
-System.out.println("company main");
+				   HttpSession session,CompanyBean cb, EventBean eb, EventreqBean erb)throws Exception{
+
 			response.setContentType("text/html;charset=UTF-8");
 			   PrintWriter out=response.getWriter();
 			   session=request.getSession();
 			   String id=(String)session.getAttribute("company_id");
-			  
 			   if(id==null){
 				   out.println("<script>");
 				   out.println("alert('다시 로그인 하세요!');");
 				   out.println("location='company_index.com';");
 				   out.println("</script>");
 			   }else if(id != null){
-				   System.out.println(eb.getCompany_id()+"dd");
-				   System.out.println("---------");
-				   System.out.println(eb.getEve_state()+"hhjhh");
+				   m.addAttribute("company_phone",cb.getCompany_phone());
+				   m.addAttribute("company_letter",cb.getCompany_letter());
+				 
+				   //System.out.println(cb.getCompany_total_cash()+"충전금액");
+				   //System.out.println(eb.getEve_state()+"hhjhh");
+				  
 				   eb.setCompany_id(id);
-				   System.out.println(eb.getCompany_id());
-				   int event_pro_listcount =  companyservice.eventprogress(eb);
-
-					   m.addAttribute("event_pro_listcount",event_pro_listcount);
+				   erb.setCompany_id(id);
+				   int event_pro_listcount = companyservice.eventprogress(eb);
+				   int event_req_listcount = companyservice.eventreqcount(erb);
+				   
+				   m.addAttribute("event_pro_listcount",event_pro_listcount);
+				   m.addAttribute("event_req_listcount",event_req_listcount);
 				   return "company/company_main";
 			   }
 			   return null;
 		}
+		
+
 		
 		//부관리자 로그인 인증
 		@RequestMapping("/company_login_ok.com")
@@ -123,10 +132,11 @@ System.out.println("company main");
 					out.println("</script>");
 				}else{
 					session.setAttribute("id",company_id);
-					 m.addAttribute("phone",cb.getCompany_phone());
-					 m.addAttribute("letter",cb.getCompany_letter());
-					  m.addAttribute("tcash",cb.getCompany_total_cash());
-
+					 m.addAttribute("company_phone",cb.getCompany_phone());
+					 m.addAttribute("company_letter",cb.getCompany_letter());
+					session.setAttribute("company_name",cb.getCompany_name());
+					session.setAttribute("company_total_cash",cb.getCompany_total_cash());
+					
 					return "redirect:/company_main.com";
 				}
 			}
@@ -168,11 +178,7 @@ System.out.println("company main");
 				   }else if(eb.getEve_state() == 0){
 					   eb.setEve_state(1);
 				   }
-				
-				   System.out.println("--------------------------");
-				   System.out.println(eb.getEvent());
-				   System.out.println(eb.getEve_state());
-				   System.out.println("--------------------------");
+				   
 				   companyservice.eventstateEdit(eb);
 				   return "redirect:/company_event.com";
 			   }
@@ -194,9 +200,9 @@ System.out.println("company main");
 				   out.println("</script>");
 			   }else if(id != null){
 //				   session.setAttribute("id",company_id);
-				   m.addAttribute("phone",cb.getCompany_phone());
-				   m.addAttribute("letter",cb.getCompany_letter());
-				   m.addAttribute("tcash",cb.getCompany_total_cash());
+				   m.addAttribute("company_phone",cb.getCompany_phone());
+				   m.addAttribute("company_letter",cb.getCompany_letter());
+ 
 				   eb.setCompany_id(id);
 				   List<EventBean> elist=this.companyservice.getEventList(eb);//목록
 
@@ -207,7 +213,6 @@ System.out.println("company main");
 			   return null;
 		}
 		
-		//광고중인 이벤트 갯수
 		
 		
 		//이벤트 작성
@@ -226,9 +231,9 @@ System.out.println("company main");
 	    	 out.println("</script>");
 	     	}else if(id != null){
 //				   session.setAttribute("id",company_id);
-				   m.addAttribute("phone",cb.getCompany_phone());
-				   m.addAttribute("letter",cb.getCompany_letter());
-				   m.addAttribute("tcash",cb.getCompany_total_cash());
+				   m.addAttribute("company_phone",cb.getCompany_phone());
+				   m.addAttribute("company_letter",cb.getCompany_letter());
+ 
 				   return "company/company_event_write";
 			   }
 			   return null;
@@ -329,6 +334,7 @@ System.out.println("company main");
 		           eventbean.setDb_price(db_price);
 		           eventbean.setCompany_id(company_id);
 		               
+		           
 		               this.companyservice.insertEvent(eventbean);//저장메서드 호출
 		               
 		                return "redirect:/company_event.com";
@@ -472,4 +478,95 @@ System.out.println("company main");
 		        	   
 		        			return null;
 		        		}
+		   
+		   //상담문의 관리
+		   @RequestMapping("/company_ask.com")
+		   public String company_ask(HttpServletResponse response, HttpSession session,
+					HttpServletRequest request, Model m, EventreqBean erb, CompanyBean cb) throws Exception {
+			   	
+			   response.setContentType("text/html;charset=UTF-8");
+		          PrintWriter out=response.getWriter();
+		          session=request.getSession();//세션 객체 생성
+		          String company_id=(String)session.getAttribute("company_id");
+		          if(company_id == null){
+		             out.println("<script>");
+		             out.println("alert('다시 로그인 하세요!')");
+		             out.println("location='company_index.com';");
+		             out.println("</script>");
+		          }else if(company_id != null){
+				
+					   m.addAttribute("company_phone",cb.getCompany_phone());
+					   m.addAttribute("company_letter",cb.getCompany_letter());
+	 
+					   erb.setCompany_id(company_id);
+
+					   List<EventreqBean> rlist=this.companyservice.getEventreqList(erb);//목록
+					   
+//					   System.out.println(rlist.get(0).getUser_id()+"1");
+//					   System.out.println(rlist.get(0).getCs_time()+"2");
+//					   System.out.println(rlist.get(0).getCs_date()+"3");
+//					   System.out.println(rlist.get(0).getCs_state()+"4");
+//					   System.out.println(rlist.get(0).getEvent()+"5");
+					   
+					   m.addAttribute("rlist", rlist);
+
+					   return "company/company_ask";
+				   }
+				   return null;
+		   }
+		   
+		   //상담문의 신규,완료,재상담 바꾸기
+		   @RequestMapping("/company_cs_state_edit.com")
+		   public String company_ask_state(HttpServletResponse response, HttpSession session,
+					HttpServletRequest request, EventreqBean erb, Model m) throws Exception {
+			   
+			   response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+				String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   erb.setEvent(new String(erb.getEvent().getBytes("ISO-8859-1"),"UTF-8"));
+				   if(erb.getCs_state() == 0){
+					   erb.setCs_state(1);
+				   }else if(erb.getCs_state() == 1){
+					   erb.setCs_state(2);
+				   }else if(erb.getCs_state() == 2){
+					   erb.setCs_state(0);
+				   }
+				
+				   companyservice.csstateEdit(erb);
+				   return "redirect:/company_ask.com";
+			   }
+			   return null;
+		   }
+		   
+		   //충전금 내역
+		   @RequestMapping("/company_cash.com")
+		   public String company_cash(HttpServletResponse response, HttpSession session,
+					HttpServletRequest request, Model m, CompanyBean cb) throws Exception {
+			   
+			   response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+				String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   m.addAttribute("company_phone",cb.getCompany_phone());
+				   m.addAttribute("company_letter",cb.getCompany_letter());
+ 
+				   
+				   
+			   return "company/company_cash";
+		   }
+			   return null;
+		   }
 }
