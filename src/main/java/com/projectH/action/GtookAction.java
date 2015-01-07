@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.projectH.model.GtookBean;
 import com.projectH.service.GtookService;
@@ -18,8 +19,9 @@ public class GtookAction {
 	private GtookService gtookservice;
 	
 	@RequestMapping("/main.com")
-	public String main(){
-		return "main";
+	public ModelAndView main(){
+		ModelAndView m = new ModelAndView("main");
+		return m;
 	}
 	@RequestMapping("/main_ok.com")
 	@ResponseBody
@@ -40,8 +42,6 @@ public class GtookAction {
 			String result = Integer.toString(point);
 			return result;
 		}
-		
-		
 	}
 	@RequestMapping("/test.com")
 	public String test(){

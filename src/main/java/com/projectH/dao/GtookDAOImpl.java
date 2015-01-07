@@ -12,8 +12,6 @@ public class GtookDAOImpl implements GtookDAO {
 	@Autowired
 	private SqlSession sqlsession;
 
-
-
 	@Override
 	public void insertUserInfo(GtookBean user) {
 		sqlsession.insert("insertUser", user);
