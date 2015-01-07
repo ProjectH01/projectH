@@ -28,9 +28,9 @@
 	   	</select>
 	   	
 	   	<!-- 상담요청 갯수 -->
-	   	<select id="eve_req_count" parameterType="eventreq" resultType="int">
-	   		select count(*) from TB_EVE_REQ where company_id=#{company_id}
-	   	</select>
+<!-- 	   	<select id="eve_req_count" parameterType="eventreq" resultType="int"> -->
+<!-- 	   		select count(*) from TB_EVE_REQ where company_id=#{company_id} -->
+<!-- 	   	</select> -->
 	   
 	   <!-- 이벤트 광고중 변경 -->
 	   	<update id="eve_state_edit" parameterType="event">
@@ -61,16 +61,57 @@
 				select * from TB_EVENT where event=#{event}
 			</select>
 			
-		<!-- 상담문의 목록 -->
-		<select id="eventreq_list" parameterType="eventreq" resultType="eventreq">
-   			select req.USER_ID as USER_ID, CS_TIME, CS_DATE,CS_STATE,EVENT,COMPANY_ID, USER_NAME, USER_PHONE
-			from (select * from TB_EVE_REQ where company_id=#{company_id}) req inner join TB_USER_INFO userinfo
-			on req.user_id = userinfo.user_id
-			order by event
-	   	</select>
 	   	
+	   	<!--상담문의 검색 전후 레코드 개수 -->
+		<select id="eve_req_count" parameterType="eventreq"	resultType="int">
+		select count(event) from TB_EVE_REQ
+		<where>
+			<if test="find_field==''">
+				<!-- 검색 조건이 없어서 총레코드 개수 반환 -->
+			</if>
+			<if test="find_field=='event'">
+				<!-- 검색 조건이 제목인 경우 -->
+				event like #{find_name}
+			</if>
+			<if test="find_field=='user_id'">
+				<!-- 검색 조건이 내용인 경우 -->
+				user_id like #{find_name}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 상담문의 검색전후 목록 -->
+	<select id="eventreq_list" parameterType="eventreq" resultType="eventreq">
+			select req.USER_ID as USER_ID, CS_TIME, CS_DATE,CS_STATE,EVENT,COMPANY_ID, USER_NAME, USER_PHONE
+			from 
+			(select * from TB_EVE_REQ where company_id=#{company_id}) req inner join TB_USER_INFO userinfo
+			on req.user_id = userinfo.user_id 	
+		 <where>
+     		<if test="find_field==''">
+     		<!-- 검색 조건이 없어서 총레코드 개수 반환 -->
+     		</if>
+     		<if test="find_field=='event'">
+     		<!-- 검색 조건이 제목인 경우 -->
+     		req.event like #{find_name}
+     		</if>
+     		<if test="find_field=='user_id'">
+     		<!-- 검색 조건이 내용인 경우 -->
+     		req.user_id like #{find_name}
+     		</if>
+     	</where>
+		order by event	
+		limit #{startrow}, #{endrow}	
+		</select>
+	
+
+		
 	   	<!-- 상담문의 변경 -->
 	   	<update id="cs_state_edit" parameterType="eventreq">
 	   		update TB_EVE_REQ set cs_state=#{cs_state} where event=#{event} and user_id=#{user_id}
+	   	</update>
+	   	
+	   	<!-- 병원기획자 상담번호 변경 -->
+	   	<update id="change_company_phone" parameterType="company">
+	   		update TB_COMPANY_INFO set company_phone=#{company_phone}, company_letter=#{company_letter} where company_id=#{company_id}
 	   	</update>
 </mapper>

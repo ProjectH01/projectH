@@ -86,13 +86,112 @@
 							</c:forEach>
 						</c:if>
 
-					<c:if test="${empty rlist}">
-						<tr>
-							<th colspan="5">이벤트가 없습니다!!</th>
-						</tr>
-					</c:if>
-
+						<c:if test="${empty rlist}">
+							<tr>
+								<th colspan="5">이벤트가 없습니다!!</th>
+							</tr>
+						</c:if>
 						</table>
+						
+						 <!-- 페이징 추가 -->
+						<div id="list_paging">
+						  <!-- 검색후 페이징 -->
+						  <c:if test="${(!empty find_field) && (!empty find_name)}">
+								<c:if test = "${page <= 1 }">
+								[이전]&nbsp;
+								</c:if>
+								<c:if test = "${page > 1 }">
+								<a href="company_ask.com?page=${page-1}&find_field=${find_field}&find_name=${find_name}">[이전]</a>&nbsp;
+								</c:if>	
+								
+								
+								<c:forEach  var="a" begin = "${startpage}" end = "${endpage}" step = "1">
+								 	<c:if test = "${a == page}">
+										<${a}>
+									</c:if>
+									
+					                <c:if test = "${a != page}">
+									 <a href="company_ask.com?page=${a}&find_field=${find_field}&find_name=${find_name}">[${a}]</a>&nbsp;
+									</c:if>
+								</c:forEach>	
+								
+								
+								<c:if test = "${page >= maxpage}">
+								 [다음]
+								</c:if>
+								<c:if test = "${page < maxpage }">
+								 <a href="company_ask.com?page=${page+1}&find_field=${find_field}&find_name=${find_name}">[다음]</a>
+								</c:if>
+						      </c:if>
+						  <!-- 검색후 페이징 끝 -->
+						  	      
+						      <!-- 검색전 페이징 -->
+					    <c:if test="${(empty find_field) && (empty find_name)}">
+						      	<c:if test = "${page <= 1 }">
+								[이전]&nbsp;
+								</c:if>
+								<c:if test = "${page > 1 }">
+								<a href="company_ask.com?page=${page-1}">[이전]</a>&nbsp;
+								</c:if>	
+								
+								
+								<c:forEach  var="a" begin = "${startpage}" end = "${endpage}" step = "1">
+								 	<c:if test = "${a == page}">
+								 	<%--해당 쪽번호가 선택된 경우 실행 --%>
+										<${a}>
+									</c:if>
+									
+					                <c:if test = "${a != page}">
+					                <%--해당 쪽번호가 선택 안된 경우 실행 --%>
+									 <a href="company_ask.com?page=${a}">[${a}]</a>&nbsp;
+									</c:if>
+								</c:forEach>	
+								
+								
+								<c:if test = "${page >= maxpage}">
+								 [다음]
+								</c:if>
+								<c:if test = "${page < maxpage }">
+								 <a href="company_ask.com?page=${page+1}">[다음]</a>
+								</c:if>
+						    </c:if>
+						    <!-- 검색전 페이징(쪽나누기) 끝 -->
+						</div>
+						
+						
+						<div id="list_menu">
+					     <c:if test="${(!empty find_field) && (!empty find_name)}">		
+							<input type="button" value="전체목록"
+							onclick="location='company_ask.com?page=${page}'"
+							class="input_b" />	
+						</c:if>
+					   </div>    
+					 
+					   <!-- 검색폼 추가 -->
+					   <div id="list_find">
+					    <table id="list_f">
+					     <tr>
+					      <th>
+					      <select name="find_field">
+					       <option value="event"
+					       <c:if test="${find_field=='event'}">
+					       ${'selected'}</c:if>>신청 이벤트</option>
+					       
+					       <option value="user_id"
+					       <c:if test="${find_field=='user_id'}">
+					       ${'selected'}</c:if>>아이디</option>
+					       <%-- bbs_title,bbs_cont는 테이블 필드명. --%>
+					      </select>
+					      <input type="text" name="find_name" id="find_name"
+					      size="16"  value="${find_name}" class="box" />
+					      <input type="submit" value="검색" class="input_b"/>
+					      </th>
+					     </tr>
+					    </table>
+					   </div>
+					   <!-- 검색폼 추가 끝 -->
+					   
+											
 					</div>
 				</form>
 			</div>

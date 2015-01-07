@@ -33,6 +33,8 @@ public interface CompanyService {
 
 	int eventreqcount(EventreqBean erb);
 
+	void changeCompanyPhone(CompanyBean cb);
+
 
 
 

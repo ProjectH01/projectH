@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,6 +48,34 @@
 					</ul>
 				</div>
 				
+				<div>
+				<form action="company_cash.com" onsubmit="return find_check();">
+					<div>   
+					    <h2>충전금 내역</h2>
+					    <table>
+					      <tr>
+					        <th align="center">충전일시</th> 
+					        <th align="center">충전금액</th> 
+					        <th align="center">비고</th>
+					      </tr>
+					      <c:if test="${!empty clist}">
+							<c:forEach var="list" items="${clist}">
+								<tr>
+									<td align="center">${list.char_date}</td>
+									<td align="center">${list.char_cash}</td>
+									<td align="center">${list.cs_time}</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+
+						<c:if test="${empty clist}">
+							<tr>
+								<th colspan="5">충전내역이 없습니다!!</th>
+							</tr>
+						</c:if>
+						</table>
+					</div>
+				</form>
 			</div>
 		</div>
 		</div>

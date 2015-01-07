@@ -79,6 +79,11 @@ public class CompanyDAOImpl implements CompanyDAO {
 		return sqlsession.selectOne("eve_req_count",erb);
 	}
 
+	@Override
+	public void changeCompanyPhone(CompanyBean cb) {
+		sqlsession.update("change_company_phone",cb);
+	}
+
 
 
 

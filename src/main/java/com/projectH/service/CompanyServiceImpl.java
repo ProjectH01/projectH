@@ -76,6 +76,11 @@ public class CompanyServiceImpl implements CompanyService {
 		return companydao.eventreqcount(erb);
 	}
 
+	@Override
+	public void changeCompanyPhone(CompanyBean cb) {
+		companydao.changeCompanyPhone(cb);
+	}
+
 
 
 	

@@ -11,6 +11,14 @@ public class EventreqBean {
 	private String user_name;
 	private String user_phone;
 	
+	/*쪽나누기(페이징)*/
+	private int startrow;
+	private int endrow;
+	
+	/*검색필드와 검색어 저장변수*/
+	private String find_field;//검색필드
+	private String find_name;//검색어
+	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -58,6 +66,30 @@ public class EventreqBean {
 	}
 	public void setUser_phone(String user_phone) {
 		this.user_phone = user_phone;
+	}
+	public int getStartrow() {
+		return startrow;
+	}
+	public void setStartrow(int startrow) {
+		this.startrow = startrow;
+	}
+	public int getEndrow() {
+		return endrow;
+	}
+	public void setEndrow(int endrow) {
+		this.endrow = endrow;
+	}
+	public String getFind_field() {
+		return find_field;
+	}
+	public void setFind_field(String find_field) {
+		this.find_field = find_field;
+	}
+	public String getFind_name() {
+		return find_name;
+	}
+	public void setFind_name(String find_name) {
+		this.find_name = find_name;
 	}
 	
 	

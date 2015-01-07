@@ -86,8 +86,8 @@ public class CompanyAction {
 				   out.println("location='company_index.com';");
 				   out.println("</script>");
 			   }else if(id != null){
-				   m.addAttribute("company_phone",cb.getCompany_phone());
-				   m.addAttribute("company_letter",cb.getCompany_letter());
+				   //m.addAttribute("company_phone",cb.getCompany_phone());
+				   //m.addAttribute("company_letter",cb.getCompany_letter());
 				 
 				   //System.out.println(cb.getCompany_total_cash()+"충전금액");
 				   //System.out.println(eb.getEve_state()+"hhjhh");
@@ -132,8 +132,8 @@ public class CompanyAction {
 					out.println("</script>");
 				}else{
 					session.setAttribute("id",company_id);
-					 m.addAttribute("company_phone",cb.getCompany_phone());
-					 m.addAttribute("company_letter",cb.getCompany_letter());
+					session.setAttribute("company_phone",cb.getCompany_phone());
+					session.setAttribute("company_letter",cb.getCompany_letter());
 					session.setAttribute("company_name",cb.getCompany_name());
 					session.setAttribute("company_total_cash",cb.getCompany_total_cash());
 					
@@ -494,13 +494,55 @@ public class CompanyAction {
 		             out.println("location='company_index.com';");
 		             out.println("</script>");
 		          }else if(company_id != null){
-				
+		        	  
+		        	int page=1;
+		      		int limit=5;			
+
+		      		String find_name=null;
+		      		String find_field=null;
+
+		      		if(request.getParameter("find_name") != null){
+		      			find_name=request.getParameter("find_name").trim();	
+		      			find_name=new String(find_name.getBytes("ISO-8859-1"),"UTF-8");
+		      			//get방식으로 넘어온 한글을 안깨지게 할려면 String클래스의 
+		      			//getBytes()메서드를 사용해야 한다.
+		      		}
+		      		find_field=request.getParameter("find_field");
+		      		//검색필드를 저장함.bbs_title,bbs_cont를 저장
+		      		erb.setFind_field(find_field);
+		      		erb.setFind_name("%"+find_name+"%");
+		      		//%는 오라클 쿼리문 검색연산자로서 하나이상의임의의 문자와
+		      		//매핑을 한다.?는 오라클 쿼리문 검색연산자로서 하나의 문자
+		      		//와 매핑을 한다.(오라클 월말평가 문제 예상)
+
+		      		//System.out.println(find_name);
+		      		//이클립스 콘솔모드에 검색어가 출력
+
+		      		if(request.getParameter("page") != null){
+		      			page=Integer.parseInt(request.getParameter("page"));
+		      			//get방식으로 넘어온 쪽번호를 정수형 숫자로 바꿔서 좌측변수에 저장한다.
+		      		}
+
+		  
+		      		int event_req_listcount = companyservice.eventreqcount(erb);
+//		      		System.out.println("----------------"+event_req_listcount);
+		      		erb.setStartrow((page-1)*5);
+		      		erb.setEndrow(erb.getStartrow()+limit-1);
+
 					   m.addAttribute("company_phone",cb.getCompany_phone());
 					   m.addAttribute("company_letter",cb.getCompany_letter());
 	 
 					   erb.setCompany_id(company_id);
 
 					   List<EventreqBean> rlist=this.companyservice.getEventreqList(erb);//목록
+					   //총 페이지 수.
+					   int maxpage=(int)((double)event_req_listcount/limit+0.95); //0.95를 더해서 올림 처리.
+						//현재 페이지에 보여줄 시작 페이지 수(1, 11, 21 등...)
+					   int startpage = (((int) ((double)page / 10 + 0.9)) - 1) * 10 + 1;
+						//현재 페이지에 보여줄 마지막 페이지 수.(10, 20, 30 등...)
+					   int endpage = maxpage;
+
+					   if (endpage>startpage+10-1) endpage=startpage+10-1;
 					   
 //					   System.out.println(rlist.get(0).getUser_id()+"1");
 //					   System.out.println(rlist.get(0).getCs_time()+"2");
@@ -509,6 +551,15 @@ public class CompanyAction {
 //					   System.out.println(rlist.get(0).getEvent()+"5");
 					   
 					   m.addAttribute("rlist", rlist);
+					   m.addAttribute("page", page);
+					   m.addAttribute("startpage", startpage);
+					   m.addAttribute("endpage", endpage);
+					   m.addAttribute("maxpage", maxpage);
+					   m.addAttribute("event_req_listcount",event_req_listcount);	
+					   m.addAttribute("find_field",find_field);
+						//find_field 키값에 board_title,board_cont저장
+					   m.addAttribute("find_name", find_name);
+						//find_name 키값에 검색어를 저장
 
 					   return "company/company_ask";
 				   }
@@ -567,6 +618,36 @@ public class CompanyAction {
 				   
 			   return "company/company_cash";
 		   }
+			   return null;
+		   }
+		   
+		   //상담번호, 문자번호 변경
+		   @RequestMapping("change_company_phone.com")
+		   public String change_company_phone(HttpServletResponse response, HttpSession session,
+					HttpServletRequest request, Model m, CompanyBean cb) throws Exception {
+			   
+			   response.setContentType("text/html;charset=UTF-8");
+				PrintWriter out=response.getWriter();
+				session=request.getSession();
+				String id=(String)session.getAttribute("company_id");
+			   if(id==null){
+				   out.println("<script>");
+				   out.println("alert('다시 로그인 하세요!');");
+				   out.println("location='company_index.com';");
+				   out.println("</script>");
+			   }else if(id != null){
+				   cb.setCompany_id(id);
+				   companyservice.changeCompanyPhone(cb);
+				   cb=this.companyservice.loginCheck(id);
+					session.setAttribute("id",id);
+					session.setAttribute("company_phone",cb.getCompany_phone());
+					session.setAttribute("company_letter",cb.getCompany_letter());
+					session.setAttribute("company_name",cb.getCompany_name());
+					session.setAttribute("company_total_cash",cb.getCompany_total_cash());
+					
+					return "redirect:/company_main.com";
+			   }
+			   
 			   return null;
 		   }
 }

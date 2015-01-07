@@ -8,9 +8,11 @@ USER_ID VARCHAR(50) PRIMARY KEY /* 유저아이디*/
 );
 
 select * from TB_USER_INFO;
+drop table TB_USER_INFO;
 
 CREATE TABLE TB_COMPANY_INFO(/*회사,기획자 정보*/
 COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
+,COMPANY_PWD varchar(50) NOT NULL /*기획자 비밀번호*/
 ,COMPANY_NAME VARCHAR(50) NOT NULL /* 상호명,이름 */	
 ,COMPANY_EMAIL VARCHAR(50) NOT NULL /* 이메일 */
 ,COMPANY_PHONE VARCHAR(30) NOT NULL	/*전화상담번호*/
@@ -19,10 +21,9 @@ COMPANY_ID VARCHAR(50) PRIMARY KEY /*기획자 아이디 */
 ,COMPANY_CASH_NUM VARCHAR(30) 	/*기관계좌번호*/
 );
 
-alter table TB_COMPANY_INFO add COMPANY_PWD varchar(50) not null;
-describe TB_COMPANY_INFO;
 select * from TB_COMPANY_INFO;
-update TB_COMPANY_INFO set company_total_cash=300000 where company_id='admin';
+drop table TB_COMPANY_INFO;
+update TB_COMPANY_INFO set company_total_cash=100000 where company_id='goodface';
 
 CREATE TABLE TB_EVENT(/*이벤트 테이블*/
 EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/	
@@ -32,16 +33,13 @@ EVENT VARCHAR(100) PRIMARY KEY /*이벤트명(PK)*/
 ,DB_PRICE	INTEGER /*DB단가*/	
 ,EVE_STATE	INTEGER /*상태(시작/종료)*/	
 ,CS_NOTE	VARCHAR(100)/*비고*/
+,BANNER_IMAGE VARCHAR(100) /*이벤트 배너이미지*/
+,DETAIL_IMAGE VARCHAR(100) /*이벤트 상세이미지*/
 );
 
-alter table TB_EVENT add BANNER_IMAGE varchar(100);
-alter table TB_EVENT add DETAIL_IMAGE varchar(100);
-
-
 select * from TB_EVENT;
-
+drop table TB_EVENT;
 update TB_EVENT set company_id='admin' where db_price=20000
-
 
 CREATE TABLE TB_EVE_REQ(/*이벤트 신청*/
 USER_ID	VARCHAR(50) /*아이디(FK)*/
@@ -53,6 +51,7 @@ USER_ID	VARCHAR(50) /*아이디(FK)*/
 );
 
 select * from TB_EVE_REQ;
+drop table TB_EVE_REQ;
 
 CREATE TABLE TB_COMPANY_CASH(/*충전금 내역*/
 COMPANY_ID	VARCHAR(50) PRIMARY KEY/*아이디(PK)*/	
@@ -62,5 +61,5 @@ COMPANY_ID	VARCHAR(50) PRIMARY KEY/*아이디(PK)*/
 ,TAKE_DATE	DATE /*차감날짜*/	
 );
 
-select * from TB_COMPANY_INFO;
-drop table TB_EVE_REQ;
+select * from TB_COMPANY_CASH;
+drop table TB_COMPANY_CASH;

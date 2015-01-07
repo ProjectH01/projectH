@@ -33,6 +33,8 @@ public interface CompanyDAO {
 
 	int eventreqcount(EventreqBean erb);
 
+	void changeCompanyPhone(CompanyBean cb);
+
 
 
 
