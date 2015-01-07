@@ -28,19 +28,20 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="javascript:;"
+					<li class="userLogin"><a href="javascript:;"
 						onclick="$('#login').modal('show', {backdrop: 'static'});">로그인</a></li>
-					<li><a href="#">*탈퇴</a></li>
+					<li class="myPage"><a href="#">마이페이지</a></li>
+					<li class="out"><a href="#">*탈퇴</a></li>
 					<li></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"> Log Out </a></li>
+					<li class="logout"><a href="#"> Log Out </a></li>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->
 			<div class="navbar-collapse collapse"
 				style="background-color: #19b96a;">
-				<p class="navbar-text pull-right" style="font-size: 18px;">POINT&nbsp;</p>
+				<p id="userinfo" class="navbar-text pull-right" style="font-size: 18px;"></p>
 			</div>
 		</div>
 	</div>
