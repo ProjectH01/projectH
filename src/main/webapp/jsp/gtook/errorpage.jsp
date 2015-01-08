@@ -30,7 +30,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="visible-xs"><a href="main.com">Home</a></li>
+					<li><a href="main.com">Home</a></li>
 					<li id="siteLogin"><a href="javascript:;"
 						onclick="$('#login').modal('show', {backdrop: 'static'});">로그인</a></li>
 					<li id="userPage"><a href="#">마이페이지</a></li>
@@ -53,6 +53,8 @@
 
 	<div class="well">
 		<div class="row">
+		<p>잘못된 접근입니다</p>
+		<p>로그인을 하세요</p>
 		</div>
 	</div>
 

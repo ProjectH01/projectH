@@ -9,7 +9,15 @@
   .make-sm-column(18);
   .make-md-column(18);
 }
-
+.image-custom{
+	max-height:600px;
+}
 .selicon{
 	height:100px;
+}
+.pageTitle{
+	position:relative;
+	left:24%;
+	font-weight:bold;
+	
 }
