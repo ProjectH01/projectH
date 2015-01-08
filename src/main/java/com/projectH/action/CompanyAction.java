@@ -22,9 +22,9 @@ import pwdconv.PwdChange;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.projectH.model.CompanyBean;
+import com.projectH.model.CompanycashBean;
 import com.projectH.model.EventBean;
 import com.projectH.model.EventreqBean;
-import com.projectH.model.UserBean;
 import com.projectH.service.CompanyService;
 
 @Controller
@@ -560,7 +560,7 @@ public class CompanyAction {
 						//find_field 키값에 board_title,board_cont저장
 					   m.addAttribute("find_name", find_name);
 						//find_name 키값에 검색어를 저장
-
+					   
 					   return "company/company_ask";
 				   }
 				   return null;
@@ -599,7 +599,7 @@ public class CompanyAction {
 		   //충전금 내역
 		   @RequestMapping("/company_cash.com")
 		   public String company_cash(HttpServletResponse response, HttpSession session,
-					HttpServletRequest request, Model m, CompanyBean cb) throws Exception {
+					HttpServletRequest request, Model m, CompanyBean cb, CompanycashBean ccb ) throws Exception {
 			   
 			   response.setContentType("text/html;charset=UTF-8");
 				PrintWriter out=response.getWriter();
@@ -613,8 +613,11 @@ public class CompanyAction {
 			   }else if(id != null){
 				   m.addAttribute("company_phone",cb.getCompany_phone());
 				   m.addAttribute("company_letter",cb.getCompany_letter());
- 
 				   
+				   ccb.setCompany_id(id);
+				   List<CompanycashBean> clist=this.companyservice.getcashList(ccb);//목록
+
+				   m.addAttribute("clist", clist);
 				   
 			   return "company/company_cash";
 		   }

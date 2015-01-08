@@ -4,36 +4,40 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이벤트 관리</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상담문의 관리</title>
+<!--  Bootstrap core CSS -->
+		<link rel="stylesheet" type="text/css" href="./dist/css/bootstrap.css"/>
+		<!-- Custom CSS -->
+		<link rel="stylesheet" type="text/css" href="./css/company_main.css" />
+		<script src="./js/jquery.js"></script>
+		<script src="./dist/js/bootstrap.js"></script>
 </head>
 <body>
 	<div class="container">
-		<div class="navbar navbar-default">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Project H</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="company_ask.com">상담문의 관리</a></li>
-					<li><a href="company_event.com">이벤트 관리</a></li>
-					<li><a href="company_cash.com">충전금 내역</a></li>
-					<li><a href="javascript:;"
-						onclick="$('#modal-3').modal('show', {backdrop: 'static'});">상담번호
-							관리</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">환영합니다!<b>${company_id}</b>님&nbsp;충전금액:&nbsp;<b>${company_total_cash}</b>원
-					</a></li>
-					<li><a href="company_logout.com"> Log Out </a></li>
-				</ul>
-			</div>
-			<!--/.nav-collapse -->
-		</div>
+	 <div class="navbar navbar-default">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="company_main.com">Project H</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="company_ask.com">상담문의 관리</a></li>
+            <li><a href="company_event.com">이벤트 관리</a></li>
+            <li><a href="company_cash.com">충전금 내역</a></li>
+            <li><a href="javascript:;"
+					onclick="$('#modal-3').modal('show', {backdrop: 'static'});">상담번호 관리</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          	<li><a href="#">환영합니다!<b>${company_id}</b>님&nbsp;충전금액:&nbsp;<b>${company_total_cash}</b>원</a></li>
+            <li><a href="company_logout.com"> Log Out </a></li>
+          </ul>
+          </div><!--/.nav-collapse -->
+       </div>
 		<div class="well">
 			<div class="row">
 
@@ -50,9 +54,8 @@
 						</li>
 					</ul>
 				</div>
-
+				
 			</div>
-
 			<form action="company_event.com" onsubmit="return find_check();">
 				<div class="">
 					<a href="company_event_write.com" class="" type="button">이벤트 등록</a>

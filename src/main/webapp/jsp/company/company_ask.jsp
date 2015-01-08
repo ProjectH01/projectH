@@ -204,9 +204,9 @@
 			</div>
 			</div>
 		</div>
-		<!-- change phone -->
+<!-- change phone -->
 		<div class="modal fade" id="modal-3" data-backdrop="static">
-<form id="fmodal-3" method = "post" enctype = "multipart/form-data" action="change_phone();">
+<form id="fmodal-3" method = "post" action="change_company_phone.com">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -223,13 +223,13 @@
             <div class="form-group">
               <label class="col-sm-3 control-label">문자받는 전화번호</label>
               <div class="col-sm-9">
-                  <input type="text" name="ctel1" class="form-control" id="field-1" placeholder="'-' 없이 숫자만 입력" value="${phone}">
+                  <input type="text" name="company_phone" class="form-control" id="field-1" placeholder="${company_phone}">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">전화상담 전화번호</label>
               <div class="col-sm-9">
-                  <input type="text" name="ctel2" class="form-control" id="field-2" placeholder="'-' 없이 숫자만 입력" value="${letter}">
+                  <input type="text" name="company_letter" class="form-control" id="field-2" placeholder="${company_letter}">
               </div>
             </div>
           </div>
@@ -245,5 +245,5 @@
 </form>
 </div>
 	<!-- change phone end -->
-	</body>
+</body>
 </html>

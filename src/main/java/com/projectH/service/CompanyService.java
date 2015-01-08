@@ -3,6 +3,7 @@ package com.projectH.service;
 import java.util.List;
 
 import com.projectH.model.CompanyBean;
+import com.projectH.model.CompanycashBean;
 import com.projectH.model.EventBean;
 import com.projectH.model.EventreqBean;
 
@@ -34,6 +35,8 @@ public interface CompanyService {
 	int eventreqcount(EventreqBean erb);
 
 	void changeCompanyPhone(CompanyBean cb);
+
+	List<CompanycashBean> getcashList(CompanycashBean ccb);
 
 
 

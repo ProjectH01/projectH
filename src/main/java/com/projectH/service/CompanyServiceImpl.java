@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.projectH.dao.CompanyDAO;
 import com.projectH.model.CompanyBean;
+import com.projectH.model.CompanycashBean;
 import com.projectH.model.EventBean;
 import com.projectH.model.EventreqBean;
 @Service
@@ -79,6 +80,11 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public void changeCompanyPhone(CompanyBean cb) {
 		companydao.changeCompanyPhone(cb);
+	}
+
+	@Override
+	public List<CompanycashBean> getcashList(CompanycashBean ccb) {
+		return companydao.cashlist(ccb);
 	}
 
 

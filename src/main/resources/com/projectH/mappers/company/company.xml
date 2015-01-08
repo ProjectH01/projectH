@@ -114,4 +114,9 @@
 	   	<update id="change_company_phone" parameterType="company">
 	   		update TB_COMPANY_INFO set company_phone=#{company_phone}, company_letter=#{company_letter} where company_id=#{company_id}
 	   	</update>
+	   	
+	   	<!-- 병원기획자 충전금액 내역 -->
+	   	<select id="companycash_list" parameterType="companycash" resultType="companycash">
+	   		select * from TB_COMPANY_CASH where company_id=#{company_id}
+	   	</select>
 </mapper>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.projectH.model.CompanyBean;
+import com.projectH.model.CompanycashBean;
 import com.projectH.model.EventBean;
 import com.projectH.model.EventreqBean;
 
@@ -59,7 +60,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 	@Override
 	public int eventprogressLs(EventBean eb) {
-		System.out.println(eb.getCompany_id());
+		//System.out.println(eb.getCompany_id());
 
 		return sqlsession.selectOne("eve_progress_count",eb);
 	}
@@ -82,6 +83,11 @@ public class CompanyDAOImpl implements CompanyDAO {
 	@Override
 	public void changeCompanyPhone(CompanyBean cb) {
 		sqlsession.update("change_company_phone",cb);
+	}
+
+	@Override
+	public List<CompanycashBean> cashlist(CompanycashBean ccb) {
+		return sqlsession.selectList("companycash_list",ccb);
 	}
 
 
