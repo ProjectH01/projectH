@@ -21,7 +21,7 @@ Kakao.init('34aef3278c87c78eb00607f1705b149c');
 	 
 	  $('#MainLogout').click(function(){
 		  Kakao.Auth.logout();
-		  	location.href="http://localhost:8080/projectH/main.com";
+		  	/*location.href="http://localhost:8080/projectH/main.com";*/
 	  });
 	  
 	  Kakao.Auth.getStatus(function(statusObj){
