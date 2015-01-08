@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+.wrapper {
+  .make-row();
+}
+.content-main {
+  .make-lg-column(18);
+  .make-xs-column(18);
+  .make-sm-column(18);
+  .make-md-column(18);
+}
+
+.selicon{
+	height:100px;
+}
